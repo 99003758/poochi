@@ -1,306 +1,81 @@
 
+import pandas as pd
+
 from openpyxl import load_workbook
 
+import sys
+import matplotlib.pyplot as plt
 
+# taken an data frame for accesing output
+df2=pd.DataFrame()
 
+for a in range(int(input(" Enter the no of inputs you required:"))):
+# for n number
 
+    first = int(input("Enter the ps.no:"))
+# first input
+    second = (input("Enter the name:"))
+# second input
+    third = input("Enter the email:")
+# third input
 
-from openpyxl.styles import Font
+    class1= pd.read_excel('final sheet211.xlsx',sheet_name=['Sheet1', 'Sheet2', 'Sheet3', 'Sheet4', 'Sheet5'])
+# reading all sheets in excel and reading it to a variable
 
+    g = class1['Sheet1']
+# sheet selectionand giving related data frame
+    g = g[g['p.s.no'] == first]
+# ps no validationand giving related data frame
+    g = g[g['NAME'] == second]
+# name validation and giving related data frame
+    g = g[g['email'] == third]
+# mail validation and giving related data frame
 
+    df = pd.DataFrame(g)
+# taking an another data frame
+    if df.empty:
+        sys.exit("ENTERED DETAILS ARE INCORRECT")
 
+# if input is invalid it will show as above
 
 
-path = "D:\Python_Practice\LnT.xlsx"
+    for i in class1.keys():
+# iteration of sheets from 2 to 5
+        sheet = class1[i]
+        g = sheet[sheet['p.s.no'] == first]
+# checking all inputs
+        g = g[g['NAME'] == second]
+        g = g[g['email'] == third]
+        col = sheet.columns
+# getting all columns into an output master sheet
+        for j in col:
+            #iteration of data in columns and sending to data frame
+            df[j] = g[j]
+#  check the input data entries is 1 or more and append data in to data frame
+            if a== 0:
+                df2[j]=g[j]
+# if data entries are more than 1 concatination of data frames in to an final master sheet
+    if a!=0:
+        df2 = pd.concat([df, df2])
+        print(df2)
 
 
+# iterates through all sheets
 
+k = load_workbook('final sheet.xlsx')
+df2.to_excel('final sheet.xlsx', sheet_name='Sheet6')
+print(df2)
 
+# selecting inputs for ploting of graphs for selected data
+df2.plot.bar(x='NAME',y='laptops')
 
-wb = load_workbook(path)
+plt.show()
+#it wil show the plot i
+k.save('.xlsx')
+k.close()
 
 
 
 
 
-name = input("Enter Name: ")
 
-
-
-
-
-PS = eval(input("Enter PS Number: "))
-
-
-
-
-
-email = input(" Enter email: ")
-
-
-
-
-
-data = []
-
-
-
-
-
-def sheet(sh_name ,name, PS, email):
-
-
-
-
-
-print("IN SHEET")
-
-
-
-
-
-# SHEET 1 Phone Number
-
-
-
-
-
-# ws=wb.get_sheet_by_name('Sheet1')
-
-
-
-
-
-ws = wb[sh_name]
-
-
-
-
-
-s = ws.max_row # variable to store max rows for sl num
-
-
-
-
-
-maxr = ws.max_row
-
-
-
-
-
-for i in range(1, s + 1):
-
-
-
-
-
-if ws.cell(row=i, column=1).value == name and ws.cell(row=i, column=2).value == PS \
-
-
-
-
-
-and ws.cell(row=i, column=3).value == email:
-
-
-
-
-
-if sh_name != 'Sheet1':
-
-
-
-
-
-data.append(ws.cell(row=i, column=4).value)
-
-
-
-
-
-else:
-
-
-
-
-
-for j in range(1, 5):
-
-
-
-
-
-print(ws.cell(row=i, column=j).value)
-
-
-
-
-
-data.append(ws.cell(row=i, column=j).value)
-
-
-
-
-
-print(data)
-
-
-
-
-
-sheet('Sheet1',name, PS, email)
-
-
-
-
-
-sheet('Sheet2',name, PS, email)
-
-
-
-
-
-sheet('Sheet3',name, PS, email)
-
-
-
-
-
-sheet('Sheet4',name, PS, email)
-
-
-
-
-
-sheet('Sheet5',name, PS, email)
-
-
-
-
-
-# Master Sheet (Sheet0)
-
-
-
-
-
-if 'Sheet0' not in wb.sheetnames:
-
-
-
-
-
-# head = []
-
-
-
-
-
-head = ['Name', 'PS Number', 'Email', 'Phone Number', 'Batch', 'Location', 'BU', 'XYZ']
-
-
-
-
-
-ws = wb.create_sheet('Sheet0')
-
-
-
-
-
-print("CREATING")
-
-
-
-
-
-s = ws.max_row # variable to store max rows for sl num
-
-
-
-
-
-for i in range(1, 9):
-
-
-
-
-
-ws.cell(row=1, column=i).value = head[i - 1]
-
-
-
-
-
-for i in range(1, 9):
-
-
-
-
-
-clr = ws.cell(row=1, column=i)
-
-
-
-
-
-clr.font = Font(bold=True)
-
-
-
-
-
-for i in range(1, 9):
-
-
-
-
-
-ws.cell(row=s + 1, column=i).value = data[i - 1]
-
-
-
-
-
-wb.save(path)
-
-
-
-
-
-else:
-
-
-
-
-
-# ws = wb.get_sheet_by_name('Sheet0')
-
-
-
-
-
-ws = wb['Sheet0']
-
-
-
-
-
-s = ws.max_row
-
-
-
-
-
-for i in range(1, 9):
-
-
-
-
-
-ws.cell(row=s + 1, column=i).value = data[i - 1]
-
-
-
-wb.save(path)
